@@ -62,9 +62,9 @@ bool BMS_UART::Init(){
 
     // Set up the output buffer with some values that won't be changing
 
-    this->my_rxBuffer[0] = 0xA5; // start byte
-    this->my_rxBuffer[1] = 0x40; // Host adress
-    this->my_rxBuffer[2] = 0x08; // Length
+    this->my_txBuffer[0] = 0xA5; // Start byte
+    this->my_txBuffer[1] = 0x40; // Host address
+    this->my_txBuffer[3] = 0x08; // Length
 
     // Fill bytes 5-11 with 0s
     for(uint8_t i = 4; i < 12; i++)
@@ -77,31 +77,29 @@ bool BMS_UART::Init(){
 bool  BMS_UART::update()
 {
     // Call all get___() functions to populate all members of the "get" struct
-    if(!getPackMeasurements())
+    if (!getPackMeasurements())
         return false; // 0x90
-    if(!getMinMaxCellVoltage())
+    if (!getMinMaxCellVoltage())
         return false; // 0x91
-    if(!getPackTemp())
+    if (!getPackTemp())
         return false; // 0x92
-    if(!getDischargeChargeMosStatus())
+    if (!getDischargeChargeMosStatus())
         return false; // 0x93
-    if(!getStatusInfo())
-        return false; //0x94
-    if(!getCellVoltages())
-        return false; //0x95
-    if(!getCellTemperature())
-        return false; //0x96
-    if(!getCellBalanceState())
-        return false; //0x97
-    if(!getFailureCodes())
-        return false; //0x98
-    
+    if (!getStatusInfo())
+        return false; // 0x94
+    if (!getCellVoltages())
+        return false; // 0x95
+    if (!getCellTemperature())
+        return false; // 0x96
+    if (!getCellBalanceState())
+        return false; // 0x97
+    if (!getFailureCodes())
+        return false; // 0x98
     return true;
-
 }
 bool BMS_UART::getPackMeasurements() //0x90
 {
-    this->sendCommand(COMMAND::MIN_MAX_CELL_VOLTAGE);
+    this->sendCommand(COMMAND::VOUT_IOUT_SOC);
     if (!this->receiveBytes())
     {
 #ifdef DEBUG_SERIAL
@@ -123,7 +121,7 @@ bool BMS_UART::getPackMeasurements() //0x90
 }
 bool BMS_UART::getMinMaxCellVoltage() // 0X91
 {
-    this->sendCommand(COMMAND::MIN_MAX_TEMPERATURE);
+    this->sendCommand(COMMAND::MIN_MAX_CELL_VOLTAGE);
     if(!this->receiveBytes())
     {
     
