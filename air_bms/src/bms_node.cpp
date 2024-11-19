@@ -1,7 +1,7 @@
 #include "air_bms/bms_node.hpp"
 
 
-BatteryStatus::BatteryStatus(): Node{"bms_status"},MAX_TEMP_THRESHOLD_{45},STATUS_{"UNKNOW"},bms_{"/dev/ttyUSB0"}
+BatteryStatus::BatteryStatus(): Node{"bms_status"},MAX_TEMP_THRESHOLD_{45},STATUS_{"UNKNOW"},Battery_capacity_{46},bms_{"/dev/ttyUSB0"}
 {
     if (!bms_.Init())
     {
@@ -26,10 +26,11 @@ void BatteryStatus::BatteryStatusCallBack()
     sensor_msgs::msg::BatteryState msg;
     msg.voltage                 = bms_.get.packVoltage;
     msg.current                 = bms_.get.packCurrent;
-    msg.charge                  = bms_.get.resCapacitymAh / 1000.0;
     msg.percentage              = bms_.get.packSOC;
     msg.temperature             = bms_.get.tempAverage;
-    msg.capacity                = msg.charge;
+    msg.design_capacity         = Battery_capacity_; 
+    msg.charge                  = bms_.get.resCapacitymAh / 1000.0;
+    msg.capacity                = Battery_capacity_;
     msg.present                 = true;
     msg.power_supply_technology = sensor_msgs::msg::BatteryState::POWER_SUPPLY_TECHNOLOGY_LION;
     msg.power_supply_status     = bms_.get.chargeState ? sensor_msgs::msg::BatteryState::POWER_SUPPLY_STATUS_CHARGING : 

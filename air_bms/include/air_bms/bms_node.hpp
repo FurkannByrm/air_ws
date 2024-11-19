@@ -19,7 +19,8 @@ class BatteryStatus : public rclcpp::Node{
     rclcpp::TimerBase::SharedPtr timer_;
     BMS_UART bms_; 
     const int MAX_TEMP_THRESHOLD_;
-    std::string STATUS_;  
+    std::string STATUS_;
+    const int Battery_capacity_;  
     enum class BatteryChargeState{
         STATIONARY, 
         CHARGING,
