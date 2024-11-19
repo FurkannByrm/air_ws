@@ -1,7 +1,7 @@
 #include "air_bms/bms_node.hpp"
 
 
-BatteryStatus::BatteryStatus(): Node{"bms_status"},bms_{"/dev/ttyUSB0"}
+BatteryStatus::BatteryStatus(): Node{"bms_status"},MAX_TEMP_THRESHOLD_{45},STATUS_{"UNKNOW"},bms_{"/dev/ttyUSB0"}
 {
     if (!bms_.Init())
     {
@@ -24,15 +24,39 @@ void BatteryStatus::BatteryStatusCallBack()
     bms_.update();
     
     sensor_msgs::msg::BatteryState msg;
-    msg.voltage      = bms_.get.packVoltage;
-    msg.current     = bms_.get.packCurrent;
-    msg.percentage  = bms_.get.packSOC;
+    msg.voltage                 = bms_.get.packVoltage;
+    msg.current                 = bms_.get.packCurrent;
+    msg.charge                  = bms_.get.resCapacitymAh / 1000.0;
+    msg.percentage              = bms_.get.packSOC;
+    msg.temperature             = bms_.get.tempAverage;
+    msg.capacity                = msg.charge;
+    msg.present                 = true;
+    msg.power_supply_technology = sensor_msgs::msg::BatteryState::POWER_SUPPLY_TECHNOLOGY_LION;
+    msg.power_supply_status     = bms_.get.chargeState ? sensor_msgs::msg::BatteryState::POWER_SUPPLY_STATUS_CHARGING : 
+    sensor_msgs::msg::BatteryState::POWER_SUPPLY_STATUS_DISCHARGING;
+    msg.cell_voltage.resize(bms_.get.numberOfCells);
+
+    for (int i = 0; i < bms_.get.numberOfCells; ++i)
+    {
+        msg.cell_voltage[i] = bms_.get.cellVmV[i] / 1000.0;
+    }
+    
+    if (bms_.get.tempMax > MAX_TEMP_THRESHOLD_ )
+    {
+        msg.power_supply_health = sensor_msgs::msg::BatteryState::POWER_SUPPLY_HEALTH_OVERHEAT;
+    }
+    else
+    {
+        msg.power_supply_health = sensor_msgs::msg::BatteryState::POWER_SUPPLY_HEALTH_GOOD;
+    }
+    
+    
 
     BatteryChargeState state;
 
     if (msg.current < 0) 
     {
-        state = BatteryChargeState::DECHARGING;
+         state = BatteryChargeState::DECHARGING;
     }
     else if (msg.current > 0)
     {
@@ -47,24 +71,22 @@ void BatteryStatus::BatteryStatusCallBack()
     switch(state)
     {
         case BatteryChargeState::STATIONARY:
-        msg.location = "Stationary";
+        STATUS_ = "STATIONARY";
         break;
         case BatteryChargeState::CHARGING:
-        msg.location = "Charging";
+        STATUS_ = "CHARGING";
         break;
         case BatteryChargeState::DECHARGING:
-        msg.location = "Decharging";
-        break;
-        default:
-        msg.location = "Unknown state!";
+        STATUS_ = "DECHARGING";
         break;
         }
 
     std::ostringstream log_bms;
-    log_bms <<"[ Charge Status ]       : "<<msg.location<<"\n"
+    log_bms <<"[ Charge Status ]       : "<<STATUS_<<"\n"
             <<"[ Voltage ]             : "<<msg.voltage<<"V \n"
             <<"[ Current ]             : "<<msg.current<<"A \n"
-            <<"[ State of Charge ]     : "<<msg.percentage<<"%\n";
+            <<"[ State of Charge ]     : "<<msg.percentage<<"%\n"
+            <<"[ Average Temperature ] : "<< msg.temperature << "°C\n";
             
 
     RCLCPP_INFO(this->get_logger(),"\n%s",log_bms.str().c_str());

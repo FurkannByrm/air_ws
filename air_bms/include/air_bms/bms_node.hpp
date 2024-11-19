@@ -18,7 +18,8 @@ class BatteryStatus : public rclcpp::Node{
     rclcpp::Publisher<sensor_msgs::msg::BatteryState>::SharedPtr publisher_;
     rclcpp::TimerBase::SharedPtr timer_;
     BMS_UART bms_; 
-    
+    const int MAX_TEMP_THRESHOLD_;
+    std::string STATUS_;  
     enum class BatteryChargeState{
         STATIONARY, 
         CHARGING,
