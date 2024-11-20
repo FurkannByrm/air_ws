@@ -78,22 +78,31 @@ bool  BMS_UART::update()
 {
     // Call all get___() functions to populate all members of the "get" struct
     if (!getPackMeasurements())
+        std::cout<<"getPackMeasurements fail"<<std::endl;
         return false; // 0x90
     if (!getMinMaxCellVoltage())
+        std::cout<<"getMinMaxCellVoltage fail"<<std::endl;
         return false; // 0x91
     if (!getPackTemp())
+        std::cout<<"getPackTemp fail"<<std::endl;
         return false; // 0x92
     if (!getDischargeChargeMosStatus())
+        std::cout<<"getDischargeChargeMosStatus fail"<<std::endl;
         return false; // 0x93
     if (!getStatusInfo())
+        std::cout<<"getStatusInfo fail"<<std::endl;
         return false; // 0x94
     if (!getCellVoltages())
+        std::cout<<"getCellVoltages fail"<<std::endl;
         return false; // 0x95
     if (!getCellTemperature())
+        std::cout<<"getCellTemperature fail"<<std::endl;
         return false; // 0x96
     if (!getCellBalanceState())
+        std::cout<<"getCellBalanceState fail"<<std::endl;
         return false; // 0x97
     if (!getFailureCodes())
+        std::cout<<"getFailureCodes fail"<<std::endl;
         return false; // 0x98
     return true;
 }

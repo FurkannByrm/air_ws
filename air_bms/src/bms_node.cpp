@@ -1,7 +1,7 @@
 #include "air_bms/bms_node.hpp"
 
 
-BatteryStatus::BatteryStatus(): Node{"bms_status_node"},bms_{"/ttyUSB0"}
+BatteryStatus::BatteryStatus(): Node{"bms_status_node"},bms_{"/dev/ttyUSB0"}
 {
     if (!bms_.Init())
     {
@@ -16,19 +16,11 @@ BatteryStatus::BatteryStatus(): Node{"bms_status_node"},bms_{"/ttyUSB0"}
 
 void BatteryStatus::BatteryStatusCallBack()
 {
-    if (!bms_.update())
-    {
-        RCLCPP_WARN(this->get_logger(),"Failed to update BMS data!");
-        return;
-    }
-    
-
+    bms_.update();
     // bool charging   = bms_.get.chargeFetState;
     // bool decharging = bms_.get.disChargeFetState;
     // bool charging   = 1;
     // bool decharging = 0;
-    
-    
     custom_interfaces::msg::BmsStatus msg;
     msg.battery_voltage     = bms_.get.packVoltage;
     msg.battery_current     = bms_.get.packCurrent;

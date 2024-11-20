@@ -18,7 +18,7 @@ class BatteryStatus : public rclcpp::Node{
     void BatteryStatusCallBack();
     rclcpp::Publisher<custom_interfaces::msg::BmsStatus>::SharedPtr publisher_;
     rclcpp::TimerBase::SharedPtr timer_;
-    BMS_UART bms_; 
+    BMS_UART bms_; //BMS_UART bms_ = BMS_UART("/ttyUSB0"); 
     
     enum class BatteryChargeState{
         STATIONARY, 
