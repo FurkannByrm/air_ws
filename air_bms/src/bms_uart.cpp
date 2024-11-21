@@ -22,8 +22,9 @@ bool BMS_UART::readyRead(bool delayed)
     FD_ZERO(&readfd);
     FD_SET(this->my_serialIntf, &readfd);
     timeval tv;
-    tv.tv_sec = delayed ? 1 : 0;
+    // tv.tv_sec = delayed ? 1 : 0;
     tv.tv_usec = 0;
+    tv.tv_sec = 0;
     int ret = select(this->my_serialIntf+ 1, &readfd, NULL, NULL, &tv);
     return FD_ISSET(this->my_serialIntf, &readfd);     
 
@@ -103,7 +104,7 @@ bool BMS_UART::getPackMeasurements() //0x90
     if (!this->receiveBytes())
     {
 #ifdef DEBUG_SERIAL
-        DEBUG_SERIAL.print("<BMS DEBUG> Receive failed, V, I, & SOC values won't be modified!\n");
+        std::cout<<"<BMS DEBUG> Receive failed, V, I, & SOC values won't be modified!\n";
 #endif
         return false;
     }
@@ -114,7 +115,7 @@ bool BMS_UART::getPackMeasurements() //0x90
     get.packCurrent = ((float)(((this->my_rxBuffer[8] << 8) | this->my_rxBuffer[9]) - 30000) / 10.0f);
     get.packSOC = ((float)((this->my_rxBuffer[10] << 8) | this->my_rxBuffer[11]) / 10.0f);
 #ifdef DEBUG_SERIAL
-    DEBUG_SERIAL.println("<BMS DEBUG> " + (String)get.packVoltage + "V, " + (String)get.packCurrent + "A, " + (String)get.packSOC + "SOC");
+    std::cout<<"<BMS DEBUG> " << get.packVoltage << "V, " << get.packCurrent << "A, " << get.packSOC << "SOC";
 #endif
 
     return true;
@@ -126,7 +127,7 @@ bool BMS_UART::getMinMaxCellVoltage() // 0X91
     {
     
 #ifdef DEBUG_SERIAL
-    DEBUG_SERIAL.print("<BMS DEBUG> Receive failed, min/max cell values won't be modified!\n");
+    std::cout<<"<BMS DEBUG> Receive failed, min/max cell values won't be modified!\n";
 #endif
         return false;
     }
@@ -145,7 +146,7 @@ bool BMS_UART::getPackTemp() // 0x92
     if(!this->receiveBytes())
     {
 #ifdef DEBUG_SERIAL
-        DEBUG_SERIAL.print("<BMS DEBUG> Receive failed, Temp values won't be modified!\n");
+        std::cout<<"<BMS DEBUG> Receive failed, Temp values won't be modified!\n";
     
 #endif
     return false;
@@ -165,7 +166,7 @@ bool BMS_UART::getDischargeChargeMosStatus() // 0x93
     if (!this->receiveBytes())
     {
 #ifdef DEBUG_SERIAL
-        DEBUG_SERIAL.print("<BMS DEBUG> Receive failed, Charge / discharge mos Status won't be modified!\n");
+        std::cout<<"<BMS DEBUG> Receive failed, Charge / discharge mos Status won't be modified!\n";
 #endif
         return false;
     }
@@ -198,7 +199,7 @@ bool BMS_UART::getStatusInfo() // 0x94
     if (!this->receiveBytes())
     {
 #ifdef DEBUG_SERIAL
-        DEBUG_SERIAL.print("<BMS DEBUG> Receive failed, Status info won't be modified!\n");
+        std::cout<<"<BMS DEBUG> Receive failed, Status info won't be modified!\n";
 #endif
         return false;
     }
@@ -236,7 +237,7 @@ bool BMS_UART::getCellVoltages() // 0x95
         if (!this->receiveBytes())
         {
 #ifdef DEBUG_SERIAL
-            DEBUG_SERIAL.print("<BMS DEBUG> Receive failed, Cell Voltages won't be modified!\n");
+            std::cout<<"<BMS DEBUG> Receive failed, Cell Voltages won't be modified!\n";
 #endif
             return false;
         }
@@ -245,8 +246,8 @@ bool BMS_UART::getCellVoltages() // 0x95
         {
 
 #ifdef DEBUG_SERIAL
-            DEBUG_SERIAL.print("<BMS DEBUG> Frame No.: " + (String)this->my_rxBuffer[4]);
-            DEBUG_SERIAL.println(" Cell No: " + (String)(cellNo + 1) + ". " + (String)((this->my_rxBuffer[5 + i + i] << 8) | this->my_rxBuffer[6 + i + i]) + "mV");
+            std::cout<<"<BMS DEBUG> Frame No.: " + this->my_rxBuffer[4];
+            std::cout<<" Cell No: " <<  (cellNo + 1) << ". " << + ((this->my_rxBuffer[5 + i + i] << 8) | this->my_rxBuffer[6 + i + i]) + "mV";
 #endif
 
             get.cellVmV[cellNo] = (this->my_rxBuffer[5 + i + i] << 8) | this->my_rxBuffer[6 + i + i];
@@ -277,7 +278,7 @@ bool BMS_UART::getCellTemperature() // 0x96
         if (!this->receiveBytes())
         {
 #ifdef DEBUG_SERIAL
-            DEBUG_SERIAL.print("<BMS DEBUG> Receive failed, Cell Temperatures won't be modified!\n");
+            std::cout<<"<BMS DEBUG> Receive failed, Cell Temperatures won't be modified!\n";
 #endif
             return false;
         }
@@ -286,8 +287,8 @@ bool BMS_UART::getCellTemperature() // 0x96
         {
 
 #ifdef DEBUG_SERIAL
-            DEBUG_SERIAL.print("<BMS DEBUG> Frame No.: " + (String)this->my_rxBuffer[4]);
-            DEBUG_SERIAL.println(" Sensor No: " + (String)(sensorNo + 1) + ". " + String(this->my_rxBuffer[5 + i] - 40) + "°C");
+            std::cout<<"<BMS DEBUG> Frame No.: " + this->my_rxBuffer[4];
+            std::cout<<" Sensor No: " << (sensorNo + 1) << " . "  <<(this->my_rxBuffer[5 + i] - 40) + "°C";
 #endif
 
             get.cellTemperature[sensorNo] = (this->my_rxBuffer[5 + i] - 40);
@@ -315,7 +316,7 @@ bool BMS_UART::getCellBalanceState() // 0x97
     if (!this->receiveBytes())
     {
 #ifdef DEBUG_SERIAL
-        DEBUG_SERIAL.println("<BMS DEBUG> Receive failed, Cell Balance State won't be modified!\n");
+        std::cout<<"<BMS DEBUG> Receive failed, Cell Balance State won't be modified!\n";
 #endif
         return false;
     }
@@ -340,12 +341,11 @@ bool BMS_UART::getCellBalanceState() // 0x97
     }
 
 #ifdef DEBUG_SERIAL
-    DEBUG_SERIAL.print("<BMS DEBUG> Cell Balance State: ");
+    std::cout<<"<BMS DEBUG> Cell Balance State: ";
     for (int i = 0; i < get.numberOfCells; i++)
     {
-        DEBUG_SERIAL.print(get.cellBalanceState[i]);
+        std::cout<<get.cellBalanceState[i];
     }
-    DEBUG_SERIAL.println();
 #endif
 
     if (cellBalance > 0)
@@ -367,7 +367,7 @@ bool BMS_UART::getFailureCodes() // 0x98
     if (!this->receiveBytes())
     {
 #ifdef DEBUG_SERIAL
-        DEBUG_SERIAL.print("<BMS DEBUG> Receive failed, Failure Flags won't be modified!\n");
+        std::cout<<"<BMS DEBUG> Receive failed, Failure Flags won't be modified!\n";
 #endif
         return false;
     }
@@ -442,7 +442,7 @@ bool BMS_UART::setDischargeMOS(bool sw) // 0xD9 0x80 First Byte 0x01=ON 0x00=OFF
     if (sw)
     {
 #ifdef DEBUG_SERIAL
-        DEBUG_SERIAL.println("Attempting to switch discharge MOSFETs on");
+        std::cout<<"Attempting to switch discharge MOSFETs on";
 #endif
         // Set the first byte of the data payload to 1, indicating that we want to switch on the MOSFET
         this->my_txBuffer[4] = 0x01;
@@ -453,14 +453,14 @@ bool BMS_UART::setDischargeMOS(bool sw) // 0xD9 0x80 First Byte 0x01=ON 0x00=OFF
     else
     {
 #ifdef DEBUG_SERIAL
-        DEBUG_SERIAL.println("Attempting to switch discharge MOSFETs off");
+        std::cout<<"Attempting to switch discharge MOSFETs off";
 #endif
         this->sendCommand(COMMAND::DISCHRG_FET);
     }
     if (!this->receiveBytes())
     {
 #ifdef DEBUG_SERIAL
-        DEBUG_SERIAL.print("<BMS DEBUG> No response from BMS! Can't verify MOSFETs switched.\n");
+        std::cout<<"<BMS DEBUG> No response from BMS! Can't verify MOSFETs switched.\n";
 #endif
         return false;
     }
@@ -473,7 +473,7 @@ bool BMS_UART::setChargeMOS(bool sw) // 0xDA 0x80 First Byte 0x01=ON 0x00=OFF
     if (sw == true)
     {
 #ifdef DEBUG_SERIAL
-        DEBUG_SERIAL.println("Attempting to switch charge MOSFETs on");
+        std::cout<<"Attempting to switch charge MOSFETs on";
 #endif
         // Set the first byte of the data payload to 1, indicating that we want to switch on the MOSFET
         this->my_txBuffer[4] = 0x01;
@@ -484,7 +484,7 @@ bool BMS_UART::setChargeMOS(bool sw) // 0xDA 0x80 First Byte 0x01=ON 0x00=OFF
     else
     {
 #ifdef DEBUG_SERIAL
-        DEBUG_SERIAL.println("Attempting to switch charge MOSFETs off");
+        std::cout<<"Attempting to switch charge MOSFETs off";
 #endif
         this->sendCommand(COMMAND::CHRG_FET);
     }
@@ -492,7 +492,7 @@ bool BMS_UART::setChargeMOS(bool sw) // 0xDA 0x80 First Byte 0x01=ON 0x00=OFF
     if (!this->receiveBytes())
     {
 #ifdef DEBUG_SERIAL
-        DEBUG_SERIAL.print("<BMS DEBUG> No response from BMS! Can't verify MOSFETs switched.\n");
+        std::cout<<"<BMS DEBUG> No response from BMS! Can't verify MOSFETs switched.\n";
 #endif
         return false;
     }
@@ -507,7 +507,7 @@ bool BMS_UART::setBmsReset() // 0x00 Reset the BMS
     if (!this->receiveBytes())
     {
 #ifdef DEBUG_SERIAL
-        DEBUG_SERIAL.print("<BMS DEBUG> Send failed, can't verify BMS was reset!\n");
+        std::cout<<"<BMS DEBUG> Send failed, can't verify BMS was reset!\n";
 #endif
         return false;
     }
@@ -538,10 +538,10 @@ void BMS_UART::sendCommand(COMMAND cmdID)
     this->my_txBuffer[12] = checksum;
 
 #ifdef DEBUG_SERIAL
-    DEBUG_SERIAL.print("\n<BMS DEBUG> Send command: 0x");
-    DEBUG_SERIAL.print(cmdID, HEX);
-    DEBUG_SERIAL.print(" Checksum = 0x");
-    DEBUG_SERIAL.println(checksum, HEX);
+    std::cout<<"\n<BMS DEBUG> Send command: 0x";
+    std::cout<<cmdID;
+    std::cout<<" Checksum = 0x";
+    std::cout<<checksum;
 #endif
     write(this->my_serialIntf, this->my_txBuffer, XFER_BUFFER_LENGTH);
 }
@@ -562,8 +562,8 @@ bool BMS_UART::receiveBytes(void)
     if (rxByteNum != XFER_BUFFER_LENGTH)
     {
 #ifdef DEBUG_SERIAL
-        DEBUG_SERIAL.print("<BMS DEBUG> Error: Received the wrong number of bytes! Expected 13, got ");
-        DEBUG_SERIAL.println(rxByteNum, DEC);
+        std::cout<<"<BMS DEBUG> Error: Received the wrong number of bytes! Expected 13, got ";
+        std::cout<<rxByteNum;
         this->barfRXBuffer();
 #endif
         return false;
@@ -572,7 +572,7 @@ bool BMS_UART::receiveBytes(void)
     if (!validateChecksum())
     {
 #ifdef DEBUG_SERIAL
-        DEBUG_SERIAL.println("<BMS DEBUG> Error: Checksum failed!");
+        std::cout<<"<BMS DEBUG> Error: Checksum failed!";
         this->barfRXBuffer();
 #endif
         return false;
@@ -590,7 +590,7 @@ bool BMS_UART::validateChecksum()
     }
 
 #ifdef DEBUG_SERIAL
-    DEBUG_SERIAL.print("<BMS DEBUG> Calculated checksum: " + (String)checksum + ", Received: " + (String)this->my_rxBuffer[XFER_BUFFER_LENGTH - 1] + "\n");
+    std::cout<<"<BMS DEBUG> Calculated checksum: " <<checksum << ", Received: " << this->my_rxBuffer[XFER_BUFFER_LENGTH - 1] + "\n";
 #endif
 
     // Compare the calculated checksum to the real checksum (the last received byte)
@@ -600,11 +600,11 @@ bool BMS_UART::validateChecksum()
 void BMS_UART::barfRXBuffer(void)
 {
 #ifdef DEBUG_SERIAL
-    DEBUG_SERIAL.print("<BMS DEBUG> RX Buffer: [");
+    std::cout<<"<BMS DEBUG> RX Buffer: [";
     for (int i = 0; i < XFER_BUFFER_LENGTH; i++)
     {
-        DEBUG_SERIAL.print(",0x" + (String)this->my_rxBuffer[i]);
+        std::cout<<",0x" + this->my_rxBuffer[i];
     }
-    DEBUG_SERIAL.print("]\n");
+    std::cout<<"]\n";
 #endif
 }

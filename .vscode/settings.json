@@ -14,5 +14,6 @@
     "files.associations": {
         "chrono": "cpp",
         "iosfwd": "cpp"
-    }
+    },
+    "ros.distro": "humble"
 }
