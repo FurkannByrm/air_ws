@@ -53,37 +53,37 @@ void BatteryStatus::BatteryStatusCallBack()
     
     
 
-    BatteryChargeState state;
+    // BatteryChargeState state;
 
-    if (msg.current < 0) 
-    {
-         state = BatteryChargeState::DECHARGING;
-    }
-    else if (msg.current > 0)
-    {
-        state = BatteryChargeState::CHARGING;
-    }
-    else
-    {
-        state = BatteryChargeState::STATIONARY;
-    }
+    // if (msg.current < 0) 
+    // {
+    //      state = BatteryChargeState::DECHARGING;
+    // }
+    // else if (msg.current > 0)
+    // {
+    //     state = BatteryChargeState::CHARGING;
+    // }
+    // else
+    // {
+    //     state = BatteryChargeState::STATIONARY;
+    // }
     
     
-    switch(state)
-    {
-        case BatteryChargeState::STATIONARY:
-        STATUS_ = "STATIONARY";
-        break;
-        case BatteryChargeState::CHARGING:
-        STATUS_ = "CHARGING";
-        break;
-        case BatteryChargeState::DECHARGING:
-        STATUS_ = "DECHARGING";
-        break;
-        }
+    // switch(state)
+    // {
+    //     case BatteryChargeState::STATIONARY:
+    //     STATUS_ = "STATIONARY";
+    //     break;
+    //     case BatteryChargeState::CHARGING:
+    //     STATUS_ = "CHARGING";
+    //     break;
+    //     case BatteryChargeState::DECHARGING:
+    //     STATUS_ = "DECHARGING";
+    //     break;
+    //     }
 
     std::ostringstream log_bms;
-    log_bms <<"[ Charge Status ]       : "<<STATUS_<<"\n"
+    log_bms <<"[ Charge Status ]       : "<<bms_.get.chargeDischargeStatus<<"\n"
             <<"[ Voltage ]             : "<<msg.voltage<<"V \n"
             <<"[ Current ]             : "<<msg.current<<"A \n"
             <<"[ State of Charge ]     : "<<msg.percentage<<"%\n"
