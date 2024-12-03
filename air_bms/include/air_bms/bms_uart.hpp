@@ -13,7 +13,6 @@
 #include <math.h>
 #include <memory.h>
 #include <iostream>
-//#define DEBUG_SERIAL
 
 
 
@@ -67,6 +66,7 @@ class BMS_UART
 
         // data from 0x93
         std::string chargeDischargeStatus; // charge/discharge status (0 stationary ,1 charge ,2 discharge)
+        uint8_t batteryStatus;
         bool chargeFetState;          // charging MOS tube status
         bool disChargeFetState;       // discharge MOS tube state
         int bmsHeartBeat;             // BMS life(0~255 cycles)
@@ -283,13 +283,13 @@ private:
      * @details
      * @return True on success, false on failure
      */
-    bool receiveBytes(void);
+    bool receiveBytes(COMMAND cmdID);
 
     /**
      *  Validates the checksum in the RX Buffer
      * @return true if checksum matches, false otherwise
      */
-    bool validateChecksum();
+    bool validateChecksum(int lenght = XFER_BUFFER_LENGTH);
 
     /**
      * Prints out the contense of the RX buffer
@@ -312,7 +312,7 @@ private:
     /**
      *  Buffer filled with data from the BMS
      */
-    uint8_t my_rxBuffer[XFER_BUFFER_LENGTH];
+    uint8_t my_rxBuffer[XFER_BUFFER_LENGTH*3];
     
     
     fd_set readfd;
