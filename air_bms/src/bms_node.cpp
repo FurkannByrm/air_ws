@@ -53,7 +53,6 @@ void BatteryStatus::BatteryStatusCallBack()
 
 
     std::ostringstream log_bms;
-    //log_bms <<"[ Charge Status ]       : "<<msg.location<<"\n"
     log_bms <<"[ Charge Status ]       : "<<bms_.get.chargeDischargeStatus<<"    \n"
             <<"[ Voltage ]             : "<<msg.voltage<<"V      \n"
             <<"[ Current ]             : "<<msg.current<<"A      \n"
