@@ -7,7 +7,6 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
 from launch.substitutions import Command, FindExecutable, PathJoinSubstitution, LaunchConfiguration
 from launch_ros.substitutions import FindPackageShare
-from launch_xml.launch_description_sources import XMLLaunchDescriptionSource
 
 def generate_launch_description():
     # Declare launch arguments
@@ -30,7 +29,7 @@ def generate_launch_description():
     robot_description_content = Command([
         PathJoinSubstitution([FindExecutable(name="xacro")]),
         " ",
-        PathJoinSubstitution([FindPackageShare("air_description"), "urdf", "air.urdf.xacro"])
+        PathJoinSubstitution([FindPackageShare("air_description"), "urdf", "air.xacro"])
     ])
     robot_description = {"robot_description": robot_description_content}
 
@@ -43,10 +42,9 @@ def generate_launch_description():
         parameters=[robot_description]
     )
 
-
     # Laser scanner launch
     merger_launch = IncludeLaunchDescription(
-        XMLLaunchDescriptionSource(
+        PythonLaunchDescriptionSource(
             os.path.join(
                 get_package_share_directory("sicks300_ros2_scan_merger"),
                 "launch", "sicks300_scanner.launch.py"
@@ -58,7 +56,7 @@ def generate_launch_description():
     navigation_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(
-                get_package_share_directory("hamal_navigation"), "launch", "hamal_navigation.launch.py"
+                get_package_share_directory("air_navigation"), "launch", "air_navigation.launch.py"
             )
         )
     )
@@ -67,7 +65,7 @@ def generate_launch_description():
     slam_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(
-                get_package_share_directory("hamal_mapping"), "launch", "hamal_mapping.launch.py"
+                get_package_share_directory("air_mapping"), "launch", "air_mapping.launch.py"
             )
         ),
         condition=IfCondition(use_slam)
@@ -83,7 +81,7 @@ def generate_launch_description():
     # Add nodes and launch files
     ld.add_action(robot_state_publisher)
     ld.add_action(merger_launch)
-    # ld.add_action(navigation_launch)
+    ld.add_action(navigation_launch)
     ld.add_action(slam_launch)
 
     return ld
