@@ -264,7 +264,7 @@
       <origin xyz="0 0 0" rpy="3.1415 0 -1.5708"/>
       <geometry>
         <!-- <cylinder radius="0.0508" length="0.055"/> -->
-<mesh filename="package://air_description/meshes/s300.obj" scale="0.001 0.001 0.001"/>
+<mesh filename="package://air_simulator/meshes/s300.obj" scale="0.001 0.001 0.001"/>
       </geometry>
         <!-- <material name="yellow"/> -->
       <material name="lidar_visual">
@@ -300,7 +300,7 @@
       <origin xyz="0 0 0" rpy="3.1415 0 -1.5708"/>
       <geometry>
         <!-- <cylinder radius="0.0508" length="0.055"/> -->
-<mesh filename="package://air_description/meshes/s300.obj" scale="0.001 0.001 0.001"/>
+<mesh filename="package://air_simulator/meshes/s300.obj" scale="0.001 0.001 0.001"/>
       </geometry>
       <!-- <material name="yellow"/> -->
       <material name="lidar_visual">

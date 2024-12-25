@@ -5,7 +5,7 @@
 <!-- =================================================================================== -->
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="air">
   <!-- Include Gazebo Plugin -->
-  <xacro:include filename="$(find air_description)/urdf/air.gazebo" />
+  <xacro:include filename="$(find air_simulator)/urdf/air.gazebo" />
   <material name="blue">
     <color rgba="0 0 0.8 1"/>
   </material>
@@ -233,7 +233,7 @@
     <visual>
       <origin xyz="0 0 0" rpy="3.1415 0 -1.5708"/>
       <geometry>
-        <mesh filename="package://air_description/meshes/s300.obj" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://air_simulator/meshes/s300.obj" scale="0.001 0.001 0.001"/>
       </geometry>
         <!-- <material name="yellow"/> -->
         <material name="lidar_visual">
@@ -267,7 +267,7 @@
     <visual>
       <origin xyz="0 0 0" rpy="3.1415 0 -1.5708"/>
       <geometry>
-        <mesh filename="package://air_description/meshes/s300.obj" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://air_simulator/meshes/s300.obj" scale="0.001 0.001 0.001"/>
       </geometry>
       <!-- <material name="yellow"/> -->
       <material name="lidar_visual">

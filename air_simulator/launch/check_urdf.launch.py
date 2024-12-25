@@ -7,8 +7,8 @@ from launch_ros.substitutions import FindPackageShare
 
 def generate_launch_description():
     
-    pkg_air_description = FindPackageShare('air_description')
-    default_rviz_config_path = PathJoinSubstitution([pkg_air_description, 'rviz', 'urdf.rviz'])
+    pkg_air_simulator = FindPackageShare('air_simulator')
+    default_rviz_config_path = PathJoinSubstitution([pkg_air_simulator, 'rviz', 'urdf.rviz'])
 
     # Show joint state publisher GUI for joints
     gui_arg = DeclareLaunchArgument(name='gui', default_value='true', choices=['true', 'false'],
@@ -19,7 +19,7 @@ def generate_launch_description():
                                     description='Absolute path to rviz config file')
     
 
-    # URDF model path within the air_description package
+    # URDF model path within the air_simulator package
     model_arg = DeclareLaunchArgument(
         'model', default_value='air.urdf',
         description='Name of the URDF description to load'
@@ -29,7 +29,7 @@ def generate_launch_description():
     urdf = IncludeLaunchDescription(
         PathJoinSubstitution([FindPackageShare('urdf_launch'), 'launch', 'display.launch.py']),
         launch_arguments={
-            'urdf_package': 'air_description',
+            'urdf_package': 'air_simulator',
             'urdf_package_path': PathJoinSubstitution(['urdf', LaunchConfiguration('model')]),
             'rviz_config': LaunchConfiguration('rvizconfig'),
             'jsp_gui': LaunchConfiguration('gui')}.items()
