@@ -77,7 +77,9 @@
         "future": "cpp",
         "shared_mutex": "cpp",
         "stdfloat": "cpp",
-        "typeindex": "cpp"
+        "typeindex": "cpp",
+        "bitset": "cpp",
+        "forward_list": "cpp"
     },
     "python.autoComplete.extraPaths": [
         "/opt/ros/jazzy/lib/python3.12/site-packages"

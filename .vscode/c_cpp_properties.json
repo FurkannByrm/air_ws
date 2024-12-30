@@ -9,6 +9,8 @@
         "/opt/ros/jazzy/include/**",
         "/home/cengo/air_ws/src/air_bms/include/**",
         "/home/cengo/air_ws/install/custom_interfaces/include/**",
+        "/home/cengo/amr_ws/src/air_simulator/include/**",
+        "/home/cengo/amr_ws/install/air_simulator/include/**",
         "/usr/include/**"
       ],
       "name": "ROS",

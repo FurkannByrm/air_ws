@@ -97,6 +97,51 @@
     <child link="battery_link"/>
     <origin rpy="0 0 0" xyz="0.0 0.0 0.33999999999999997"/>
   </joint>
+  <!-- Camera -->
+  <joint name="camera_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0.225 0 0.075"/>
+    <child link="camera_link"/>
+    <parent link="base_link"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+  <link name="camera_link">
+    <pose>0 0 0 0 0 0</pose>
+    <inertial>
+      <mass value="0.1"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6"/>
+    </inertial>
+    <collision name="collision">
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size=".03 .03 .03"/>
+      </geometry>
+    </collision>
+    <visual name="camera_link_visual">
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size=".03 .03 .03"/>
+      </geometry>
+    </visual>
+  </link>
+  <gazebo reference="camera_link">
+    <material>Gazebo/Red</material>
+  </gazebo>
+  <joint name="camera_optical_joint" type="fixed">
+    <origin rpy="-1.5707 0 -1.5707" xyz="0 0 0"/>
+    <child link="camera_link_optical"/>
+    <parent link="camera_link"/>
+  </joint>
+  <link name="camera_link_optical">
+  </link>
+  <!-- IMU -->
+  <joint name="imu_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="imu_link"/>
+  </joint>
+  <link name="imu_link">
+  </link>
   <link name="joint_link_1">
     <visual>
       <origin rpy="1.5707963267948966 0 0" xyz="0 0 0"/>
@@ -220,53 +265,59 @@
   <!-- ****************************** LASER 0 *****************************    -->
   <link name="laser_link_0">
     <inertial>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
       <mass value="0.125"/>
-      <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001" />
-    </inertial>   
+      <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>
+    </inertial>
     <collision>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <cylinder radius="0.0508" length="0.18"/>
+        <cylinder length="0.18" radius="0.0508"/>
       </geometry>
     </collision>
     <visual>
-      <origin xyz="0 0 0" rpy="3.1415 0 -1.5708"/>
+      <origin rpy="3.1415 0 -1.5708" xyz="0 0 0"/>
       <geometry>
+        <!-- <cylinder radius="0.0508" length="0.055"/> -->
         <mesh filename="package://air_simulator/meshes/s300.obj" scale="0.001 0.001 0.001"/>
       </geometry>
-        <!-- <material name="yellow"/> -->
-        <material name="lidar_visual">
-          <color rgba="1.0 1.0 0.0 1.0"/>
-          <ambient>1.0 1.0 0.0 1.0</ambient>
-          <diffuse>1.0 1.0 0.0 1.0</diffuse>
-          <specular>0.5 0.5 0.0 1.0</specular>
-          <emissive>0.2 0.2 0.0 1.0</emissive>
-        </material>
+      <!-- <material name="yellow"/> -->
+      <material name="lidar_visual">
+        <color rgba="1.0 1.0 0.0 1.0"/>
+        <ambient>1.0 1.0 0.0 1.0</ambient>
+        <diffuse>1.0 1.0 0.0 1.0</diffuse>
+        <specular>0.5 0.5 0.0 1.0</specular>
+        <emissive>0.2 0.2 0.0 1.0</emissive>
+      </material>
     </visual>
   </link>
-  
   <joint name="laser_joint_0" type="fixed">
     <parent link="base_link"/>
     <child link="laser_link_0"/>
-    <origin xyz="0.4 -0.28 0.18" rpy="0 0 -0.7854"/>
+    <origin rpy="0 0 -0.7854" xyz="0.4 -0.28 0.18"/>
   </joint>
+ <gazebo reference="laser_link_0">
+    <selfCollide>false</selfCollide>
+    <mu1 value="0.05" />
+    <mu2 value="0.05" />
+  </gazebo>
   <!-- ****************************** LASER 1 *****************************    -->
   <link name="laser_link_1">
     <inertial>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
       <mass value="0.125"/>
-      <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001" />
-    </inertial>   
+      <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>
+    </inertial>
     <collision>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <cylinder radius="0.0508" length="0.18"/>
+        <cylinder length="0.18" radius="0.0508"/>
       </geometry>
     </collision>
     <visual>
-      <origin xyz="0 0 0" rpy="3.1415 0 -1.5708"/>
+      <origin rpy="3.1415 0 -1.5708" xyz="0 0 0"/>
       <geometry>
+        <!-- <cylinder radius="0.0508" length="0.055"/> -->
         <mesh filename="package://air_simulator/meshes/s300.obj" scale="0.001 0.001 0.001"/>
       </geometry>
       <!-- <material name="yellow"/> -->
@@ -282,6 +333,18 @@
   <joint name="laser_joint_1" type="fixed">
     <parent link="base_link"/>
     <child link="laser_link_1"/>
-    <origin xyz="-0.4 0.28 0.18" rpy="0 0 2.3562"/>
+    <origin rpy="0 0 2.3562" xyz="-0.4 0.28 0.18"/>
   </joint>
+  <gazebo reference="laser_link_1">
+    <selfCollide>false</selfCollide>
+    <mu1 value="0.05" />
+    <mu2 value="0.05" />
+  </gazebo>
+   <joint name="laser_merger_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0 0 0.22"/>
+    <parent link="base_link"/>
+    <child link="laser_merger_link"/>
+  </joint>
+  <link name="laser_merger_link">
+  </link>
 </robot>
