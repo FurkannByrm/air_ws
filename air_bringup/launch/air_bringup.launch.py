@@ -76,12 +76,12 @@ def generate_launch_description():
 
     # Add declared arguments
     ld.add_action(declare_operation_mode)
-    ld.add_action(declare_use_slam)
+    # ld.add_action(declare_use_slam)
 
     # Add nodes and launch files
     ld.add_action(robot_state_publisher)
-    ld.add_action(merger_launch)
-    ld.add_action(navigation_launch)
-    ld.add_action(slam_launch)
+    # ld.add_action(merger_launch)
+    # ld.add_action(navigation_launch)
+    # ld.add_action(slam_launch)
 
     return ld
