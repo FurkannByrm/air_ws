@@ -8,15 +8,19 @@
       "includePath": [
         "/home/furkan/air_ws/src/air_bms/include/**",
         "/home/furkan/air_ws/install/air_bms/include/**",
-        "/home/furkan/air_ws/install/**",                  
-        "/opt/ros/humble/include/**",                      
-        "/usr/include/**"                                  
+        "/home/furkan/air_ws/install/air_led_controller/include/**",
+        "/home/furkan/air_ws/src/air_led_controller/include/**",
+        "/home/furkan/air_ws/install/**",
+        "/home/furkan/air_ws/build/**",
+        "/home/furkan/air_ws/devel/include/**",
+        "/opt/ros/humble/include/**",
+        "/usr/include/**"
       ],
       "name": "ROS",
       "intelliSenseMode": "gcc-x64",
       "compilerPath": "/usr/bin/gcc",
       "cStandard": "gnu11",
-      "cppStandard": "c++14"
+      "cppStandard": "c++20"
     }
   ],
   "version": 4
