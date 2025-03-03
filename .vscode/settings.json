@@ -81,7 +81,13 @@
         "typeindex": "cpp",
         "typeinfo": "cpp",
         "variant": "cpp",
-        "format": "cpp"
+        "format": "cpp",
+        "list": "cpp",
+        "valarray": "cpp",
+        "csignal": "cpp",
+        "future": "cpp",
+        "expected": "cpp",
+        "shared_mutex": "cpp"
     },
     "ros.distro": "humble"
 }

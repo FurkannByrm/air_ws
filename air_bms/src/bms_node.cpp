@@ -11,7 +11,7 @@ BatteryStatus::BatteryStatus(): Node{"bms_status"},bms_{"/dev/ttyUSB0"}
         return;
     }
     
-    publisher_ = this->create_publisher<sensor_msgs::msg::BatteryState>("bms_status",10);
+    publisher_ = this->create_publisher<sensor_msgs::msg::BatteryState>("bms_status",1000);
     timer_     = this->create_wall_timer(std::chrono::seconds(1),std::bind(&BatteryStatus::BatteryStatusCallBack,this));
 }
 

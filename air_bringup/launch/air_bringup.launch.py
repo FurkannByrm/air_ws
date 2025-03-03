@@ -80,7 +80,7 @@ def generate_launch_description():
 
     # Add nodes and launch files
     ld.add_action(robot_state_publisher)
-    # ld.add_action(merger_launch)
+    ld.add_action(merger_launch)
     # ld.add_action(navigation_launch)
     # ld.add_action(slam_launch)
 
